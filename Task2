@@ -1,0 +1,93 @@
+--1. Students Table
+
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    DateOfBirth DATE,
+    Email VARCHAR(100),
+    Phone VARCHAR(15)
+);
+--2. Courses Table
+
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY AUTO_INCREMENT,
+    CourseName VARCHAR(100),
+    CourseDescription TEXT,
+    Credits INT
+);
+--3. Enrollments Table
+
+CREATE TABLE Enrollments (
+    EnrollmentID INT PRIMARY KEY AUTO_INCREMENT,
+    StudentID INT,
+    CourseID INT,
+    Grade CHAR(2,
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+);
+/*SQL Queries
+Below are some SQL queries to manage student records:*/
+
+/*1. Inserting Records
+Insert a Student:*/
+
+INSERT INTO Students (FirstName, LastName, DateOfBirth, Email, Phone)
+VALUES ('John', 'Doe', '2000-05-15', 'john.doe@example.com', '123-456-7890');
+Insert a Course:
+
+INSERT INTO Courses (CourseName, CourseDescription, Credits)
+VALUES ('Database Management', 'An introduction to database systems.', 3);
+--Enroll a Student in a Course:
+
+INSERT INTO Enrollments (StudentID, CourseID, Grade)
+VALUES (1, 1, 'A'); -- Assuming StudentID 1 and CourseID 1 exist
+/*2. Querying Records
+Get All Students:*/
+
+SELECT * FROM Students;
+Get All Courses:
+
+SELECT * FROM Courses;
+Get All Enrollments:
+
+SELECT * FROM Enrollments;
+/*3. Joining Tables
+Get Student Names and Their Enrolled Courses:*/
+
+SELECT S.FirstName, S.LastName, C.CourseName
+FROM Students S
+JOIN Enrollments E ON S.StudentID = E.StudentID
+JOIN Courses C ON E.CourseID = C.CourseID;
+--Get Students with Their Grades:
+
+SELECT S.FirstName, S.LastName, C.CourseName, E.Grade
+FROM Students S
+JOIN Enrollments E ON S.StudentID = E.StudentID
+JOIN Courses C ON E.CourseID = C.CourseID;
+--Get Average Grade per Course:
+
+SELECT C.CourseName, AVG(CASE E.Grade
+    WHEN 'A' THEN 4.0
+    WHEN 'B' THEN 3.0
+    WHEN 'C' THEN 2.0
+    WHEN 'D' THEN 1.0
+    WHEN 'F' THEN 0
+    ELSE NULL END) AS AverageGrade
+FROM Courses C
+JOIN Enrollments E ON C.CourseID = E.CourseID
+GROUP BY C.CourseName;
+/*Additional Management Queries
+Update a Student's Email:*/
+
+UPDATE Students
+SET Email = 'john.newemail@example.com'
+WHERE StudentID = 1;
+Delete a Course:
+
+DELETE FROM Courses
+WHERE CourseID = 1;
+--Delete a Student Enrollment:
+
+DELETE FROM Enrollments
+WHERE EnrollmentID = 1;
